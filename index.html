@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FCF8F3">
+<title>Sätt upp Claude eller ChatGPT · @joudgor</title>
+<meta name="description" content="Fyra saker att ställa in först i Claude eller ChatGPT, med båda prompterna på svenska, färdiga att kopiera.">
+<meta property="og:title" content="Sätt upp Claude eller ChatGPT">
+<meta property="og:description" content="Fyra saker att ställa in först, med båda prompterna på svenska.">
+<style>
+/* Typsnitten ligger i fonts/ i det här repot, inte hos Google: besökarens IP-adress skickas inte vidare.
+   Manrope och Caveat, SIL Open Font License, latin-delen (täcker å, ä, ö). Källa: fonts/KALLA.md */
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400 800;font-display:swap;src:url(fonts/manrope-latin.woff2) format('woff2')}
+@font-face{font-family:'Caveat';font-style:normal;font-weight:500 700;font-display:swap;src:url(fonts/caveat-latin.woff2) format('woff2')}
+:root{
+  --cream:#FCF8F3;--paper:#F4ECE2;--tan:#DBC7AF;--card-solid:#F3EBE1;
+  --ink:#50301B;--ink-2:#6A4A33;--line:rgba(80,48,27,.16);
+  --accent:#A9531A;--accent-bright:#D9732A;--dark:#4A2A17;--dark-2:#5A3520;
+  --r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Manrope',system-ui,sans-serif;background:var(--cream);color:var(--ink);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{text-wrap:balance}
+p{text-wrap:pretty}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px}
+.hand{font-family:'Caveat',cursive;font-weight:700;color:var(--accent);font-style:normal;display:inline-block;transform:rotate(-3deg);font-size:1.12em;line-height:.9}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.inl{color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+.nav{position:sticky;top:0;z-index:50;background:rgba(252,248,243,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:'Caveat',cursive;font-size:27px;font-weight:700;color:var(--accent);text-decoration:none}
+.pdf{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(80,48,27,.25);background:rgba(255,255,255,.5);color:var(--ink);font-family:inherit;font-size:13.5px;font-weight:700;padding:8px 14px;border-radius:999px;cursor:pointer;min-height:38px}
+.pdf:hover{border-color:var(--ink)}
+
+.hero{padding-top:44px;padding-bottom:26px;background:radial-gradient(50% 70% at 85% 20%,rgba(220,112,30,.12),rgba(0,0,0,0) 70%)}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags span{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);background:rgba(219,199,175,.45);padding:5px 11px;border-radius:999px}
+.hero h1{margin-top:16px;font-size:clamp(38px,5.4vw,58px);font-weight:800;letter-spacing:-.045em;line-height:1.04}
+.quote{margin-top:16px;font-size:clamp(24px,2.8vw,30px)}
+.hero p.lede{margin-top:16px;font-size:17.5px;color:var(--ink-2);max-width:52ch}
+
+.sec{padding-top:26px}
+.sec-h{display:flex;align-items:baseline;gap:14px}
+.sec-h .n{font-family:'Caveat',cursive;font-size:46px;font-weight:700;color:var(--accent);line-height:1}
+.sec-h h2{font-size:clamp(23px,2.6vw,28px);font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.sec-h h2 small{display:block;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-bottom:4px}
+
+/* Översikten */
+.overview{margin-top:16px;background:#FBF8F4;border-radius:24px;overflow:hidden;box-shadow:0 1px 0 rgba(80,48,27,.06),0 20px 40px -32px rgba(80,48,27,.7)}
+.ov-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:14px;padding:14px 20px;border-top:1px solid var(--line)}
+.ov-row:first-child{border-top:0;background:var(--card-solid)}
+.ov-row div{font-size:15px;color:#5C3D27}
+.ov-row .k{font-weight:800;color:var(--ink)}
+.ov-row .lb{display:none;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.ov-row:first-child div{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+
+.st{position:relative;background:#FBF8F4;border-radius:24px;padding:26px 28px 28px;margin-top:16px;box-shadow:0 1px 0 rgba(80,48,27,.06),0 20px 40px -32px rgba(80,48,27,.7)}
+.st p{margin-top:10px;font-size:16px;color:#5C3D27;line-height:1.65}
+.st p:first-child{margin-top:0}
+.st p b{color:var(--ink)}
+.st h3{margin-top:22px;font-size:18px;font-weight:800;letter-spacing:-.015em}
+.who{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#FFF8F1;background:var(--dark-2);padding:4px 10px;border-radius:999px;margin-right:6px;vertical-align:2px}
+.st figure{margin-top:16px}
+.st figure img{border-radius:14px;border:1px solid var(--line);width:100%;height:auto}
+.st figcaption{margin-top:8px;font-size:12.5px;color:var(--ink-2)}
+.note{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--card-solid);font-size:14.5px;color:var(--ink-2)}
+.note b{color:var(--ink)}
+
+.prompt{margin-top:16px;border-radius:16px;background:var(--dark-2);color:#F7EEE4;overflow:hidden}
+.prompt-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px 10px 16px;border-bottom:1px solid rgba(247,238,228,.14)}
+.prompt-top span{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#D9C2AA}
+.copy{border:1px solid rgba(247,238,228,.35);background:transparent;color:#FFF8F1;font-family:inherit;font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:999px;cursor:pointer;min-height:36px;flex-shrink:0}
+.copy:hover{border-color:#F7EEE4}
+.copy.done{background:#F0A970;border-color:#F0A970;color:var(--dark)}
+.prompt pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:14.5px;line-height:1.6;padding:16px 18px 18px;color:#F2E4D4}
+
+.tip{margin-top:30px;background:var(--tan);border-radius:var(--r);padding:28px 30px}
+.tip .hand{font-size:28px;transform:rotate(-2deg)}
+.tip h2{margin-top:4px;font-size:24px;font-weight:800;letter-spacing:-.02em}
+.tip p{margin-top:8px;color:#5C3D27}
+
+.next{padding-top:40px}
+.next h2{margin-top:8px;font-size:clamp(26px,3vw,34px);font-weight:800;letter-spacing:-.035em;line-height:1.15}
+.next p{margin-top:10px;color:var(--ink-2);font-size:16.5px;max-width:58ch}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+.card{display:block;text-decoration:none;background:#FBF8F4;border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px}
+.card:hover{border-color:var(--ink)}
+.card b{display:block;font-size:16.5px;letter-spacing:-.01em}
+.card span{display:block;margin-top:4px;font-size:14px;color:var(--ink-2)}
+
+/* Kontakt (id="kontakt") */
+.kontakt{margin-top:34px;border-radius:var(--r);background:var(--dark);color:#F7EEE4;padding:28px 28px 26px}
+.kontakt h2{font-size:clamp(22px,2.6vw,27px);font-weight:800;letter-spacing:-.025em;color:#FFF8F1;line-height:1.2}
+.kontakt p{margin-top:8px;color:#E3CDB6;font-size:15.5px;max-width:56ch}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{display:inline-flex;align-items:center;min-height:44px;padding:10px 20px;border-radius:999px;background:var(--accent);color:#FFF8F1;font-weight:700;text-decoration:none;font-size:15px}
+.btn:hover{background:#B85F21}
+.btn.ghost{background:transparent;border:1px solid rgba(247,238,228,.4)}
+.btn.ghost:hover{border-color:#F7EEE4;background:transparent}
+
+/* Flytande ruta (id="floatCta") */
+#floatCta{position:fixed;right:18px;bottom:18px;z-index:60;max-width:330px;background:var(--cream);border:1.5px solid var(--accent);border-radius:18px;padding:14px 40px 14px 16px;box-shadow:0 18px 40px -20px rgba(80,48,27,.55)}
+#floatCta b{display:block;font-size:15px;line-height:1.3}
+#floatCta span{display:block;margin-top:3px;font-size:13.5px;color:var(--ink-2)}
+#floatCta a{display:inline-flex;margin-top:9px;align-items:center;min-height:38px;padding:7px 15px;border-radius:999px;background:var(--accent);color:#FFF8F1;font-weight:700;font-size:13.5px;text-decoration:none}
+#floatCta button{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:15px;cursor:pointer;line-height:1}
+#floatCta.hide{display:none}
+
+footer{padding:40px 0 110px;text-align:center;font-size:13px;color:var(--ink-2)}
+footer a{text-decoration:none;font-weight:600}
+
+@media(max-width:600px){
+  .wrap{padding-left:16px;padding-right:16px}
+  .nav-in{height:58px}
+  .logo{font-size:24px}
+  .hero h1{font-size:36px}
+  .hero p.lede{font-size:16.5px}
+  .st{padding:20px 18px 22px}
+  .prompt pre{font-size:14px;padding:14px}
+  .tip{padding:22px 20px}
+  .kontakt{padding:24px 20px}
+  .ov-row{grid-template-columns:minmax(0,1fr);gap:4px;padding:14px 18px}
+  .ov-row:first-child{display:none}
+  .ov-row .lb{display:block;margin-top:6px}
+  .cards{grid-template-columns:minmax(0,1fr)}
+  #floatCta{left:12px;right:12px;bottom:12px;max-width:none}
+}
+@media print{
+  .nav,#floatCta,.copy,.pdf,body::before{display:none!important}
+  body{background:#fff}
+  .st,.overview{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+  .prompt{background:#fff;color:#000;border:1px solid #999}
+  .prompt pre{color:#000}
+  .kontakt{background:#fff;color:#000;border:1px solid #999}
+  .kontakt h2,.kontakt p{color:#000}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="https://ikapp.ai/jude">@joudgor</a>
+    <button class="pdf" type="button" id="pdfBtn">Spara som PDF</button>
+  </div>
+</header>
+
+<main>
+
+<section class="wrap hero">
+  <div class="tags"><span>Claude</span><span>ChatGPT</span><span>Kom igång</span><span>7 min att läsa</span></div>
+  <h1>Sätt upp Claude eller ChatGPT</h1>
+  <p class="quote hand">”Jag har laddat ner Claude. Vad gör jag nu?”</p>
+  <p class="lede">Båda är riktigt bra, och skillnaden mellan dem är liten. Vilken du än börjar med, gör de här fyra sakerna först. Det tar ungefär en timme, och du gör det en gång.</p>
+</section>
+
+<!-- 1 · ÖVERSIKTEN -->
+<section class="wrap sec">
+  <div class="sec-h"><span class="n">1</span><h2>De fyra stegen i korthet</h2></div>
+  <div class="overview" role="table" aria-label="De fyra stegen i Claude och ChatGPT">
+    <div class="ov-row" role="row"><div role="columnheader">Steg</div><div role="columnheader">Claude</div><div role="columnheader">ChatGPT</div></div>
+    <div class="ov-row" role="row"><div class="k" role="cell">1 · Ladda ner datorappen</div><div role="cell"><span class="lb">Claude</span>claude.com/download</div><div role="cell"><span class="lb">ChatGPT</span>chatgpt.com/download</div></div>
+    <div class="ov-row" role="row"><div class="k" role="cell">2 · Berätta vem du är</div><div role="cell"><span class="lb">Claude</span>Prompt 1 nedan</div><div role="cell"><span class="lb">ChatGPT</span>Prompt 1 nedan</div></div>
+    <div class="ov-row" role="row"><div class="k" role="cell">3 · Koppla dina verktyg</div><div role="cell"><span class="lb">Claude</span>Plustecknet, sedan Connectors</div><div role="cell"><span class="lb">ChatGPT</span>Plugins, sedan @ i textrutan</div></div>
+    <div class="ov-row" role="row"><div class="k" role="cell">4 · Lär den skriva som du</div><div role="cell"><span class="lb">Claude</span>Prompt 2 nedan</div><div role="cell"><span class="lb">ChatGPT</span>Writing style i inställningarna</div></div>
+  </div>
+</section>
+
+<!-- 2 · DATORAPPEN -->
+<section class="wrap sec">
+  <div class="sec-h"><span class="n">2</span><h2><small>Steg 1</small>Använd datorappen, inte webbläsaren</h2></div>
+  <div class="st">
+    <p>I appen på datorn kan AI:n nå filerna och programmen på din dator. Det är där den börjar göra uppgifter åt dig, i stället för att bara svara på frågor.</p>
+    <p><span class="who">Claude</span>Ladda ner appen på <a class="inl" href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a> och tryck på <b>Download (1)</b>. Sidan visar knappen för just din dator, Windows eller Mac. Du kan börja gratis.</p>
+    <figure>
+      <img src="images/steg1-ladda-ner.jpg" alt="Claudes nedladdningssida med knappen Download markerad som 1" loading="lazy">
+      <figcaption>Steg 1 · Ladda ner Claude för din dator</figcaption>
+    </figure>
+    <p><span class="who">ChatGPT</span>Ladda ner appen på <a class="inl" href="https://chatgpt.com/download" target="_blank" rel="noopener">chatgpt.com/download</a>. I appen kan du ge den en uppgift som går över flera av dina verktyg på en gång.</p>
+    <figure>
+      <img src="images/chatgpt-appen.jpg" alt="ChatGPT-appen på datorn som jobbar med en uppgift över tre verktyg" loading="lazy">
+      <figcaption>Exempel från OpenAI: en uppgift över tre verktyg</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 3 · KONTEXT -->
+<section class="wrap sec">
+  <div class="sec-h"><span class="n">3</span><h2><small>Steg 2</small>Berätta vem du är, en gång</h2></div>
+  <div class="st">
+    <p>Klistra in Prompt 1 i en ny chatt och skicka den. Tryck sedan på <b>ljudvågsknappen</b> nere till höger i textrutan och prata fritt: om din vardag, ditt jobb och vad du vill ha hjälp med. AI:n ställer frågor, en i taget, tills den har en tydlig bild.</p>
+    <h3>Prompt 1 · Fungerar i både Claude och ChatGPT</h3>
+    <div class="prompt">
+      <div class="prompt-top"><span>Prompt 1 · klistra in i en ny chatt</span><button class="copy" type="button">Kopiera</button></div>
+<pre>Jag vill att du lär känna mig så att du kan hjälpa mig bättre i varje framtida chatt. Strax byter jag till röstläge och berättar fritt om mig själv, mitt jobb och vad jag behöver hjälp med. Det blir rörigt: jag hoppar mellan ämnen och taligenkänningen gör fel ibland. Rätta mig inte, ta in vad jag menar.
+
+Medan jag pratar ställer du följdfrågor, en i taget och kort, tills du har en tydlig bild av:
+- vem jag är: bakgrund, intressen och hur jag vill att du pratar med mig
+- mitt jobb eller mina studier: vad jag gör, verktygen jag använder och hur en vanlig vecka ser ut
+- vad jag vill ha hjälp med: saker jag gör om och om igen, mina mål och det som tar tid
+
+Fråga gärna efter riktiga exempel, de säger mer än allmänna svar. Fråga aldrig om något jag redan har berättat.
+
+När du har tillräckligt säger du till och skriver två dokument:
+1. "Om mig": vem jag är och hur jag vill att du jobbar med mig.
+2. "Mitt jobb": vad jag gör, mina verktyg och vad jag behöver hjälp med.
+
+Skriv båda som tydliga punktlistor på svenska, så att jag kan klistra in dem i vilket AI-verktyg som helst.</pre>
+    </div>
+    <figure>
+      <img src="images/voice-mode.jpg" alt="Ljudvågsknappen nere till höger i textrutan" loading="lazy">
+      <figcaption>Steg 2 · Ljudvågsknappen startar röstläget</figcaption>
+    </figure>
+    <p>När samtalet är klart har du två dokument. Spara dem. <b>Skapa ett projekt</b> och lägg dem där, eller klistra in dem i början av en ny chatt. Då slipper du förklara vem du är varje gång.</p>
+  </div>
+</section>
+
+<!-- 4 · VERKTYGEN -->
+<section class="wrap sec">
+  <div class="sec-h"><span class="n">4</span><h2><small>Steg 3</small>Koppla verktygen du använder varje dag</h2></div>
+  <div class="st">
+    <p>Mejl, kalender, Google Drive, Slack och allt annat du jobbar i. När de är kopplade kan AI:n läsa och göra saker direkt i dem.</p>
+    <p><span class="who">Claude</span>Det heter <b>Connectors</b>. Tryck på <b>plustecknet (1)</b> vid textrutan, sedan <b>Connectors (2)</b> och <b>Manage connectors (3)</b>. Slå på verktygen ett i taget.</p>
+    <figure>
+      <img src="images/claude-connectors.jpg" alt="Claude: plustecknet markerat som 1, Connectors som 2 och Manage connectors som 3" loading="lazy">
+      <figcaption>Steg 3 · Plustecknet, Connectors, Manage connectors</figcaption>
+    </figure>
+    <p><span class="who">ChatGPT</span>Det heter <b>plugins</b>. Koppla de verktyg du vill ha, och skriv sedan <b>@</b> i textrutan för att använda dem.</p>
+    <figure>
+      <img src="images/chatgpt-plugins.jpg" alt="ChatGPT:s textruta med texten Do anything. @ to use plugins" loading="lazy">
+      <figcaption>Steg 3 · Skriv @ för att använda dina plugins</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 5 · SKRIVSTILEN -->
+<section class="wrap sec">
+  <div class="sec-h"><span class="n">5</span><h2><small>Steg 4</small>Lär den att skriva som du</h2></div>
+  <div class="st">
+    <p>Det här är det viktigaste steget. När AI:n vet hur du skriver låter allt den skriver åt dig som du, och du slipper skriva om det.</p>
+    <p><span class="who">Claude</span>Klistra in Prompt 2. Claude går igenom texter du själv skrivit i verktygen från steg 3 och gör en <b>skill</b> av dem: en färdig instruktion som den använder varje gång den skriver något åt dig.</p>
+    <h3>Prompt 2 · Gjord för Claude</h3>
+    <div class="prompt">
+      <div class="prompt-top"><span>Prompt 2 · klistra in i Claude</span><button class="copy" type="button">Kopiera</button></div>
+<pre>Gå igenom verktygen jag har kopplat (till exempel Gmail, Google Drive och Slack) och hitta minst 20 texter som jag själv har skrivit: mejl, meddelanden och dokument. Använd bara texter jag skrivit, inte sådana jag fått.
+
+Analysera hur jag skriver: ton, meningslängd, hur jag hälsar och avslutar, ord och uttryck jag använder ofta, ord jag aldrig använder, och hur jag skriver olika i mejl, chatt och längre dokument.
+
+Gör sedan om det till en skill som heter "min-skrivstil", med tydliga regler och några korta exempel med mina egna formuleringar, så att du använder den varje gång du skriver något åt mig. Visa mig en sammanfattning av reglerna innan du sparar skillen.</pre>
+    </div>
+    <p class="note"><b>Gör steg 3 först.</b> Prompten fungerar bara om verktygen är kopplade. Kolla också att <b>Code execution and file creation</b> är på under Settings och Capabilities, och att skills är på under Customize och Skills. Har du inte skrivit så mycket i verktygen, klistra in några egna mejl direkt i chatten i stället.</p>
+    <figure>
+      <img src="images/claude-skill.jpg" alt="Claude bygger en skill i en chatt och visar den färdiga skillen" loading="lazy">
+      <figcaption>Exempel från Anthropic: Claude bygger en skill</figcaption>
+    </figure>
+    <p><span class="who">ChatGPT</span>Slå på <b>writing style</b> under <b>Settings</b> och <b>Personalization</b>. Där väljer du vilka verktyg den får läsa, till exempel meddelanden, dokument och mejl, och ChatGPT går själv igenom hur du skriver. Funktionen finns i betalda planer men rullas fortfarande ut.</p>
+    <figure>
+      <img src="images/chatgpt-writing-style.jpg" alt="ChatGPT:s ruta Set up writing style med Messaging, Documents och Email" loading="lazy">
+      <figcaption>Steg 4 · Writing style i ChatGPT</figcaption>
+    </figure>
+    <p><b>Ser du inte writing style, eller har du gratisversionen?</b> Klistra in tre till fem mejl du själv skrivit i en chatt, tillsammans med prompten nedan, och spara svaret i ditt projekt.</p>
+    <div class="prompt">
+      <div class="prompt-top"><span>Prompt · klistra in i ChatGPT</span><button class="copy" type="button">Kopiera</button></div>
+<pre>Här är några texter som jag själv har skrivit. Analysera hur jag skriver: ton, meningslängd, hur jag hälsar och avslutar, ord jag använder ofta och ord jag aldrig använder.
+
+Skriv sedan en kort lista med regler för min skrivstil, med några exempel på mina egna formuleringar, så att du kan skriva precis som jag. Skriv på svenska.
+
+[klistra in dina texter här]</pre>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="tip">
+    <p class="hand">Det viktigaste tipset</p>
+    <h2>Gör det en gång, ordentligt</h2>
+    <p>De här fyra sakerna gör du en gång. Efter det slipper du förklara vem du är, klistra in samma bakgrund om och om igen, eller skriva om det AI:n skrev för att det inte lät som du. En timme nu sparar dig den tiden i varje chatt efteråt.</p>
+  </div>
+</section>
+
+<section class="wrap next">
+  <p class="eyebrow">Fortsätt</p>
+  <h2>Nästa steg när du är <em class="hand">igång</em></h2>
+  <p>Varje vecka visar jag en riktig uppgift du kan låta AI göra, steg för steg, i veckobrevet AI med Joud. Gratis, och du kan avsluta när du vill.</p>
+  <div class="cards">
+    <a class="card" href="https://ikapp.ai/nyhetsbrev?utm_source=guide&amp;utm_content=satt-upp-claude-chatgpt" target="_blank" rel="noopener"><b>Veckobrevet AI med Joud</b><span>En uppgift i veckan, steg för steg</span></a>
+    <a class="card" href="https://ikapp.ai/guider" target="_blank" rel="noopener"><b>Alla mina guider</b><span>Gratis, en per video</span></a>
+  </div>
+
+  <div class="kontakt" id="kontakt">
+    <h2>Vill du lära dig AI, eller veta om ditt företag kan använda det?</h2>
+    <p>Jag hjälper dig komma igång, från första frågan till färdig rutin. Hör av dig så tar vi reda på om och var AI passar för dig eller ditt företag.</p>
+    <div class="btns">
+      <a class="btn" href="https://cal.com/jude-hwaijeh-oix30w/strategisamtal" target="_blank" rel="noopener">Boka ett strategisamtal</a>
+      <a class="btn ghost" href="mailto:jude@ikapp.ai">Mejla jude@ikapp.ai</a>
+      <a class="btn ghost" href="https://instagram.com/joudgor" target="_blank" rel="noopener">Skriv på Instagram</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div id="floatCta" role="complementary" aria-label="Workshoppen">
+  <button type="button" aria-label="Stäng">×</button>
+  <b>Vill du lära dig AI, eller komma djupare in i Claude?</b>
+  <span>Gå vår live-workshop, Claude på 120 minuter.</span>
+  <a href="https://ikapp.ai/live" target="_blank" rel="noopener">Föranmäl dig</a>
+</div>
+
+<footer>
+  <div class="wrap">@joudgor · powered by Ikapp.ai · <a href="mailto:jude@ikapp.ai">jude@ikapp.ai</a></div>
+</footer>
+
+<script>
+(function(){
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var txt = btn.closest('.prompt').querySelector('pre').innerText;
+      var klar = function(){ btn.textContent = 'Kopierad'; btn.classList.add('done'); setTimeout(function(){ btn.textContent = 'Kopiera'; btn.classList.remove('done'); }, 1800); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(klar, function(){ reserv(txt); klar(); });
+      else { reserv(txt); klar(); }
+    });
+  });
+  function reserv(t){ var ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch(e) {} document.body.removeChild(ta); }
+  document.getElementById('pdfBtn').addEventListener('click', function(){ window.print(); });
+  var f = document.getElementById('floatCta');
+  try { if (sessionStorage.getItem('floatCtaHide') === '1') f.classList.add('hide'); } catch(e) {}
+  f.querySelector('button').addEventListener('click', function(){ f.classList.add('hide'); try { sessionStorage.setItem('floatCtaHide','1'); } catch(e) {} });
+})();
+</script>
+</body>
+</html>
